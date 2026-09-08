@@ -12,7 +12,6 @@ class User(BaseModel):
     password_hash = CharField(unique=True)
     created_at=DateTimeField(default=datetime.datetime.now)
         
-
 class Delivery (BaseModel):
     id = PrimaryKeyField()
     package_name = CharField(required = True)
@@ -25,6 +24,3 @@ class Delivery (BaseModel):
 class UseresDeliveries(BaseModel):
     user_id = ForeignKeyField(user, backref= "usersdeliveries")
     delivery_id = ForeignKeyField(delivery, backref= "usersdeliveries")
-
-
-
