@@ -28,8 +28,8 @@ def check_users_delivery(user_id,delivery_id) -> bool:
     for line in UseresDeliveries:
         if line.user_id == user_id and line.delivery_id == delivery_id:
             return True
-        else:
-            return False
+    else:
+        return False
 
 def check_name_package(name_package):
     if name_package == "":
