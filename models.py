@@ -1,10 +1,10 @@
 from peewee import *
 from datetime import datetime
-from db import connectToDataBase
+from db import connectToDataBase,getEnv
 
 class BaseModel(Model):
     class Meta:
-        database = connectToDataBase()
+        database = connectToDataBase(getEnv())
 
 class User(BaseModel):
     id=PrimaryKeyField()
