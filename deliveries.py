@@ -1,8 +1,19 @@
 from db import connectToDataBase,getEnv
 from models import User, Delivery, UseresDeliveries
 import validations as val
+from questionary import select
 
 db = connectToDataBase(getEnv())
+
+
+def get_new_status():
+    new_status = select("enter new status",choices=["Waiting","In Transit","Delivered","Cancelled"]).ask()
+    return new_status
+
+def get_delivery_id():
+    delivery_id = int(input("enter delivery id"))
+    return delivery_id
+
 
 def update_delivery_status (user:User,delivery_id:int,new_status:str) -> bool:
     try:
@@ -12,7 +23,7 @@ def update_delivery_status (user:User,delivery_id:int,new_status:str) -> bool:
             delivery.save()
             return True
     except:
-        return False
+        raise Exception ("unable to update")
 
 def get_user_deliveries(user:User) -> list[Delivery]:
     my_deliveries = []
@@ -30,11 +41,7 @@ def display_user_deliveries(deliveries:list[Delivery]):
 
 def delete_delivery(user:User,delivery_id:int) -> bool:
     try:
-        delivery = Delivery.get(Delivery.id == delivery_id)
-        if delivery.owner == user.id:
-            delivery.delete_instance()
-        else:
-            return False
+        Delivery.delete().where((Delivery.id == delivery_id) & (Delivery.owner == user.id)).execute()
     except:
         raise Exception("couldnt delete delivery")
 
@@ -58,7 +65,7 @@ def get_info_to_create():
                 destination=True
         if weight == False:
             Weight= input("enter Weight of package: ")
-            if val.check_Weight(weight) == False:
+            if val.check_Weight(weight) == True:
                 continue
             else:
                 weight=True
@@ -67,5 +74,6 @@ def get_info_to_create():
     return [Package_name,Destination,Weight]
 
 def create_delivery(user,package,destination,weight):
+    
     data = {"package_name":package,"destination":destination,"weight":weight,"owner":user}
-    Delivery.create(data)
+    Delivery.create(**data)
