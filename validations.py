@@ -3,24 +3,26 @@ from peewee import *
 from models import *
 from deliveries import *
 
-
 def check_password_length(password):
     if len(password)<6:
         raise Exception("Password must be at least 6 characters long")
 
+def check_user_exists(username):
+    for user in User.select():
+        if user.username == username:
+            raise Exception("username already in use")
+
 def check_user(username):
     for user in User.select().where(User.username == username):
         if user == None:
-            print("login fails! ")
-            return None
-        else:
-            return user.username
+            raise Exception ("login fails!")
           
 def check_password(password,hashed_password):
     if bcrypt.checkpw(password, hashed_password):
         print("Authentication successful: password correct!")
     else:
         print("Authentication failed: Incorrect password!")
+        exit()
 
 def check_users_delivery(user_id,delivery_id) -> bool:
     for line in UseresDeliveries:
@@ -44,4 +46,3 @@ def check_Weight(Weight):
         return True
     else:
         return False
-

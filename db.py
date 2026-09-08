@@ -12,12 +12,12 @@ def getEnv ():
         
     if not all([db_name,db_user,db_host,db_port]):
         raise ValueError("Database configuration is missing")
+    return [db_name,db_user,db_password,db_host,int(db_port)]
 
-    return db_name,db_user,db_password,db_host,db_port
 
-def connectToDataBase(db_info:tuple):   
+def connectToDataBase(db_info):   
     db = MySQLDatabase(
-    db_name=db_info[0],
+    db_info[0],
     user=db_info[1],
     password=db_info[2],
     host=db_info[3],
