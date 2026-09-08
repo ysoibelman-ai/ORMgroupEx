@@ -1,7 +1,8 @@
 import bycrypt
-from db import connectToDataBase
+from db import connectToDataBase, getEnv
 from models import UseresDeliveries,User,Delivery
-db = connectToDataBase()
+
+db = connectToDataBase(getEnv())
 def get_username_password():
     username = input("Enter Username: ")
     password = input("Enter Password: ")

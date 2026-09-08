@@ -15,13 +15,13 @@ def getEnv ():
 
     return db_name,db_user,db_password,db_host,db_port
 
-def connectToDataBase(db_name,db_user,db_password,db_host,db_port):   
+def connectToDataBase(db_info:tuple):   
     db = MySQLDatabase(
-    db_name,
-    user=db_user,
-    password=db_password,
-    host=db_host,
-    port=int(db_port)
+    db_name=db_info[0],
+    user=db_info[1],
+    password=db_info[2],
+    host=db_info[3],
+    port=db_info[4]
     )
     return db
 
