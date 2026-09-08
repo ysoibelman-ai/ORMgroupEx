@@ -1,7 +1,8 @@
-from db import connectToDataBase
+from db import connectToDataBase,getEnv
 from models import User, Delivery, UseresDeliveries
 import validations as val
-db = connectToDataBase()
+
+db = connectToDataBase(getEnv())
 
 def update_delivery_status (user:User,delivery_id:int,new_status:str) -> bool:
     try:
@@ -37,7 +38,6 @@ def delete_delivery(user:User,delivery_id:int) -> bool:
     except:
         raise Exception("couldnt delete delivery")
 
-
 def get_info_to_create():
     package=False
     destination =False
@@ -64,9 +64,7 @@ def get_info_to_create():
                 weight=True
         else:
             status=False
-    return Package_name,Destination,Weight
-
-print(get_info_to_create())
+    return [Package_name,Destination,Weight]
 
 def create_delivery(user,package,destination,weight):
     data = {"package_name":package,"destination":destination,"weight":weight,"owner":user}

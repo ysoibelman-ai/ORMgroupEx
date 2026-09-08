@@ -1,21 +1,23 @@
-import bycrypt
+import bcrypt
 from db import connectToDataBase, getEnv
 from models import UseresDeliveries,User,Delivery
+import validations as val
 
-db = connectToDataBase(getEnv())
 def get_username_password():
     username = input("Enter Username: ")
     password = input("Enter Password: ")
-    return username, password
+    val.check_password_length(password)
+    hashed_password = hash_password(password)
+    val.check_password(password.encode('utf-8'),hashed_password)
+    return [username, hashed_password]
 
 def hash_password(password):
     password = password.encode('utf-8')
-    salt = bycrypt.gensalt()
-    hashed_password = bycrypt.hashpw(password,salt)
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password,salt)
     return hashed_password
 
 def register_user(username,password):
-    with db.connection_context(reuse_if_open=True):
         try:
             new_user = User.create(username = username, password_hash = password)
             return new_user
